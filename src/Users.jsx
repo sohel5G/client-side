@@ -9,14 +9,28 @@ const Users = () => {
             .then(res => res.json())
             .then(data => setUsers(data));
     }, [])
- 
+
     const handleAddUser = event => {
         event.preventDefault()
-        const name = event.target.name.value;
-        const email = event.target.email.value;
+        const form = event.target;
+        const name = form.name.value;
+        const email = form.email.value;
 
         const newUsers = { name, email }
-        console.log(newUsers);
+
+        fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newUsers)
+        })
+            .then(res => res.json())
+            .then(data => {
+                const newUsers = [...users, data]
+                setUsers(newUsers)
+                form.reset()
+            })
     }
 
     return (
